@@ -6,11 +6,11 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 12:10:46 by hzimmerm          #+#    #+#             */
-/*   Updated: 2023/12/13 17:59:37 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2023/12/20 16:42:24 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 int	ft_printchar(int c)
 {
@@ -23,6 +23,11 @@ int	ft_printstr(char *str)
 	int	count;
 
 	count = 0;
+	if (str == NULL)
+	{
+		write(1, "(null)", 6);
+		return (6);
+	}
 	while (*str)
 	{
 		write(1, str, 1);
@@ -49,8 +54,18 @@ int	ft_printnbr(int n)
 		length++;
 	}
 	if (n >= 10)
-		ft_printnbr(n / 10);
-	ft_printchar(n % 10 + '0');
-	length++;
+		length = length + ft_printnbr(n / 10);
+	length = length + ft_printchar(n % 10 + '0');
+	return (length);
+}
+
+int	ft_print_unsint(unsigned int n)
+{
+	int	length;
+
+	length = 0;
+	if (n >= 10)
+		length = length + ft_print_unsint(n / 10);
+	length = length + ft_printchar(n % 10 + '0');
 	return (length);
 }

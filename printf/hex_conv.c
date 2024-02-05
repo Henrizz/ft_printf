@@ -1,51 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ptr_conv.c                                         :+:      :+:    :+:   */
+/*   hex_conv.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/13 15:00:30 by hzimmerm          #+#    #+#             */
-/*   Updated: 2023/12/20 16:32:22 by hzimmerm         ###   ########.fr       */
+/*   Created: 2023/12/20 14:02:32 by hzimmerm          #+#    #+#             */
+/*   Updated: 2023/12/20 17:03:00 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_conv_print_ptr(uintptr_t n)
+int	ft_conv_print_hex(unsigned int n, const char sign)
 {
 	int	length;
 
 	length = 0;
-	if (n >= 16)
+	if (n > 15)
 	{
-		length = length + ft_conv_print_ptr(n / 16);
-		length = length + ft_conv_print_ptr(n % 16);
+		length = length + ft_conv_print_hex(n / 16, sign);
+		length = length + ft_conv_print_hex(n % 16, sign);
 	}
 	else
 	{
 		if (n <= 9)
 			length = length + ft_printchar(n + '0');
 		else
-			length = length + ft_printchar(n - 10 + 'a');
+		{
+			if (sign == 'x')
+				length = length + ft_printchar(n - 10 + 'a');
+			if (sign == 'X')
+				length = length + ft_printchar(n - 10 + 'A');
+		}
 	}
-	return (length);
-}
-
-int	ft_putptr(unsigned long long ptr)
-{
-	int	length;
-
-	if (!ptr) 
-	{
-		write(1, "(nil)", 5);
-		return (5);
-	}
-	length = 2;
-	ft_printstr("0x");
-	if (ptr == 0)
-		length = length + ft_printchar('0');
-	else
-		length = length + ft_conv_print_ptr(ptr);
 	return (length);
 }
