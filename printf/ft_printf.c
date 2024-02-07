@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:25:19 by Henriette         #+#    #+#             */
-/*   Updated: 2023/12/20 17:04:49 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/02/07 16:42:59 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 #include "ft_printf.h"
 
-static int	ft_conversion(const char c, va_list args)
+int	ft_conversion(const char c, va_list args)
 {
 	int	length;
 
@@ -35,12 +35,17 @@ static int	ft_conversion(const char c, va_list args)
 		length = ft_conv_print_hex(va_arg(args, unsigned int), c);
 	else if (c == '%')
 		length = ft_printchar('%');
+	else if (c == '@')
+		length = write(1, "%@", 2);
+	else
+		length = -1;
 	return (length);
 }
 
 int	ft_printf(const char *format, ...)
 {
 	int		length;
+	int		result;
 	int		i;
 	va_list	args;
 
@@ -51,7 +56,10 @@ int	ft_printf(const char *format, ...)
 	{
 		if (format[i] == '%')
 		{
-			length = length + ft_conversion(format[i + 1], args);
+			result = ft_conversion(format[i + 1], args);
+			if (result == -1 || format[i + 1] == '\0')
+				return (-1);
+			length = length + result;
 			i++;
 		}
 		else 
@@ -69,8 +77,9 @@ int main(void)
 	int result1;
 	int result2;
 	//char	ptr[] = "Hallo string";
-	result1 = printf("[%x]\n", -1);
-	result2 = ft_printf("[%x]\n", -1);
-	printf("%d, %d", result1, result2);
+	result1 = printf("buil %d%@", -1);
+	printf("\n");
+	result2 = ft_printf("ours %d%@", -1);
+	printf("\n\n%d, %d", result1, result2);
 	return (0);
 }*/
